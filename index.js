@@ -86,14 +86,6 @@ async function run() {
       res.send(result);
     });
 
-    // post order collection
-
-    app.post("/orders", async (req, res) => {
-      const order = req.body;
-      const result = await orderCollection.insertOne(order);
-      res.send(result);
-    });
-
     // get orders
     app.get("/orders", verifyJWT, async (req, res) => {
       const decodedEmail = req.decoded.email;
@@ -106,6 +98,14 @@ async function run() {
       } else {
         res.status(403).send({ message: "Forbidden Access" });
       }
+    });
+
+    // post order collection
+
+    app.post("/orders", async (req, res) => {
+      const order = req.body;
+      const result = await orderCollection.insertOne(order);
+      res.send(result);
     });
 
     app.get("/hero", (req, res) => {
