@@ -107,6 +107,10 @@ async function run() {
         res.status(403).send({ message: "Forbidden Access" });
       }
     });
+
+    app.get("/hero", (req, res) => {
+      res.send("hero makes hero ku");
+    });
   } finally {
   }
 }
