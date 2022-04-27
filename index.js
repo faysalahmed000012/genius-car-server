@@ -44,6 +44,15 @@ async function run() {
     const serviceCollection = client.db("GeniusCar").collection("services");
     const orderCollection = client.db("GeniusCar").collection("orders");
 
+    //Auth
+    app.post("/login", async (req, res) => {
+      const user = req.body;
+      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "1d",
+      });
+      res.send({ accessToken });
+    });
+
     app.get("/service", async (req, res) => {
       const query = {};
       const cursor = serviceCollection.find(query);
@@ -57,15 +66,6 @@ async function run() {
       const query = { _id: ObjectID(id) };
       const service = await serviceCollection.findOne(query);
       res.send(service);
-    });
-
-    //API
-    app.post("/login", async (req, res) => {
-      const user = req.body;
-      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "1d",
-      });
-      res.send({ accessToken });
     });
 
     // add a new service
@@ -89,7 +89,7 @@ async function run() {
     // get orders
     app.get("/orders", verifyJWT, async (req, res) => {
       const decodedEmail = req.decoded.email;
-      const email = req.body.email;
+      const email = req.query.email;
       if (email === decodedEmail) {
         const query = { email: email };
         const cursor = orderCollection.find(query);
